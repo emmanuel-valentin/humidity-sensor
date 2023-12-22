@@ -1,0 +1,18 @@
+{
+  "author": "Emmanuel Valentin",
+  "description": "Humidity sensor app",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-reload": "^2.0.0-alpha.1"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "name": "sensor",
+  "scripts": {
+    "dev": "electron ."
+  },
+  "version": "1.0.0",
+  "dependencies": {
+    "serialport": "^12.0.0"
+  }
+}
