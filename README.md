@@ -18,6 +18,7 @@ Este comando instalará todas las dependencias necesarias para que el proyecto p
 Posteriormemte, conecta el circuito del sensor e identifica el puerto serial virtual que ha abierto. Luego, en el archivo [`sensor.js`](https://github.com/emmanuel-valentin/humidity-sensor/blob/1c4595e8c90edc0f4b884ec211c5d43542807f86/sensor.js#L37C1-L38C38) coloca el puerto correspondiente:
 
 ```js
+// suponiendo que el circuito ha abierto el puerto /dev/ttyUSB0
 initializePort('/dev/ttyUSB0', 9600);
 ```
 
