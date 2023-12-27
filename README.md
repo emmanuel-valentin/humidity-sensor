@@ -7,7 +7,7 @@ Primero, verifica que tienes el siguiente software instalado en tu computadora:
 1. [Node.js](https://nodejs.org)
 2. Un editor de código.
 
-Una vez comprobado que se tiene instalado el software necesario, deberás dirigirte a la carpeta donde se encuentre proyecto y ejecuta el siguiente comando:
+Una vez comprobado que se tiene instalado el software necesario, deberás dirigirte a la carpeta del proyecto y ejecuta el siguiente comando:
 
 ```bash
 npm install
