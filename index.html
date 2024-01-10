@@ -8,12 +8,47 @@
     <title>Sensor de humedad</title>
   </head>
   <body>
-    <div class="container screen">
+    <main class="container screen">
       <h1>Sensor de humedad</h1>
-      <div class="humidity">
-        <p class="humidity__text" id="humidity-label"></p>
+      <div class="humidity" id="humidity">
+        <div class="humidity-figure" id="humidity-figure"></div>
+        <p class="humidity-text">0%HR</p>
       </div>
-    </div>
+
+      <section class="humidity-configuration" id="humidity-configuration">
+        <form class="form" id="config-form">
+          <h2>Configuración</h2>
+          <div class="form__field">
+            <label for="port-a">Ingrese el puerto A</label>
+            <input
+              type="text"
+              name="port-a"
+              id="port-a"
+              placeholder="Ingrese el puerto A"
+            />
+          </div>
+          <div class="form__field">
+            <label for="port-b">Ingrese el puerto B</label>
+            <input
+              type="text"
+              name="port-b"
+              id="port-b"
+              placeholder="Ingrese el puerto B"
+            />
+          </div>
+          <div class="form__field">
+            <label for="baud-rate">Baudios</label>
+            <input
+              type="number"
+              name="baud-rate"
+              id="baud-rate"
+              placeholder="Ingrese los baudios"
+            />
+          </div>
+          <button type="submit">Aceptar</button>
+        </form>
+      </section>
+    </main>
   </body>
   <script src="./sensor.js"></script>
 </html>

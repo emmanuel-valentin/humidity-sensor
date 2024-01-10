@@ -1,38 +1,99 @@
 const { SerialPort, ReadlineParser } = require('serialport');
 
-const humidityLabel = document.getElementById('humidity-label');
+const humidityLabel = document.querySelector('.humidity-text');
 
-const initializePort = (path, baudRate) => {
+const humidityContainer = document.getElementById('humidity-figure');
+const configurationForm = document.getElementById('config-form');
+
+configurationForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(configurationForm);
+  const pathPortA = formData.get('port-a');
+  const pathPortB = formData.get('port-b');
+  const baudRate = formData.get('baud-rate');
+
   const readerPort = new SerialPort({
-    path,
-    baudRate,
+    path: pathPortA,
+    baudRate: Number.parseInt(baudRate),
     autoOpen: false,
     lock: false,
   });
 
+  const writerPort = new SerialPort({
+    path: pathPortB,
+    baudRate: Number.parseInt(baudRate),
+    autoOpen: false,
+    lock: false,
+  });
+
+  initializePort(writerPort, readerPort);
+  render(/* isPortConfigured = */ true);
+});
+
+const render = (isPortConfigured = false) => {
+  const configSection = document.getElementById('humidity-configuration');
+  const humiditySection = document.getElementById('humidity');
+
+  if (isPortConfigured) {
+    configSection.hidden = true;
+    humiditySection.hidden = false;
+  } else {
+    configSection.hidden = false;
+    humiditySection.hidden = true;
+  }
+
+  console.log({
+    configSection: configSection.hidden,
+    humiditySection: humiditySection.hidden,
+  });
+};
+
+const initializePort = (readerPort, writerPort) => {
   readerPort.pipe(new ReadlineParser());
 
   readerPort.open((err) => {
     if (err) {
+      render(/* isPortConfigured = */ false);
       throw new Error(`Error al abrir el puerto serial: ${err.message}`);
     }
     console.log(`Port ${readerPort.path} connected`);
   });
 
   readerPort.on('data', (data) => {
-    console.log(data[0]);
+    const [receivedData] = data;
 
     // Binary combination sent by the microcontroller
-    const receivedData = Number.parseInt(data[0]);
+    // const receivedDataToDecimal = Number.parseInt(receivedData);
+    const receivedDataToDecimal = Number.parseInt(data);
     const resolutionVoltage = 0.019607;
-    const outputVoltage = receivedData * resolutionVoltage;
+    const outputVoltage = receivedDataToDecimal * resolutionVoltage;
     const sensorVoltage = outputVoltage / 1.5151;
     const humidity = sensorVoltage / 0.033;
+
     humidityLabel.textContent = `${humidity.toFixed(2)}%HR`;
+    humidityContainer.style = `background: linear-gradient(-45deg, var(--primary-200) ${humidity.toFixed(
+      2
+    )}%, var(--bg-300) 0%);`;
   });
 
-  readerPort.close();
+  writerPort.open((err) => {
+    if (err) {
+      throw new Error(`Error al abrir el puerto serial: ${err.message}`);
+    }
+
+    let count = 0b00000000;
+
+    setInterval(() => {
+      if (count === 0b11111111) {
+        count = 0b00000000;
+      }
+
+      count += 0b00000001;
+      console.log(count.toString());
+      readerPort.write(count.toString());
+    }, 100);
+  });
 };
 
-// TODO: Preguntar por el puedo a leer a través de la aplicación
-initializePort('/dev/ttyUSB0', 9600);
+render(/* isPortConfigured = */ false);
